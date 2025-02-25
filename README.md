@@ -61,7 +61,6 @@ The API uses JWT authentication. To authenticate:
 - **Reporting**: Basic reporting on trainer-course linkages.
 
 ## Running Unit Tests
-(Coming Soon - Once unit tests are implemented)
 ```sh
    dotnet test
 ```
