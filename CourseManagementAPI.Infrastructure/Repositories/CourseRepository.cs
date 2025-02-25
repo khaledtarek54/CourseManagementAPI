@@ -29,10 +29,11 @@ namespace CourseManagementAPI.Infrastructure.Repositories
             return await _context.Courses.FindAsync(id);
         }
 
-        public async Task AddCourseAsync(Course course)
+        public async Task<int> AddCourseAsync(Course course)
         {
             await _context.Courses.AddAsync(course);
             await _context.SaveChangesAsync();
+            return course.Id;
         }
 
         public async Task UpdateCourseAsync(Course course)

@@ -1,4 +1,5 @@
-﻿using CourseManagementAPI.Application.Interfaces;
+﻿using CourseManagementAPI.Application.DTOs;
+using CourseManagementAPI.Application.Interfaces;
 using CourseManagementAPI.Domain.Entities;
 using CourseManagementAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -38,9 +39,22 @@ namespace CourseManagementAPI.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<CourseTrainer>> GetAllCourseTrainerLinksAsync()
+        public async Task<IEnumerable<CourseTrainerReportDto>> GetAllCourseTrainerLinksAsync()
         {
-            return await _context.CourseTrainers.Include(ct => ct.Course).Include(ct => ct.Trainer).ToListAsync();
+            return await _context.CourseTrainers
+            .Include(ct => ct.Trainer)
+            .Include(ct => ct.Course)
+            .Select(ct => new CourseTrainerReportDto
+            {
+                TrainerId = ct.TrainerId,
+                TrainerName = ct.Trainer.UserName,
+                TrainerEmail = ct.Trainer.Email,
+                CourseId = ct.CourseId,
+                CourseName = ct.Course.Name,
+                CoursePrice = ct.Course.Price,
+                AssignedDate = ct.AssignedDate
+            })
+            .ToListAsync();
         }
     }
 }

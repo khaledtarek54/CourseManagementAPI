@@ -1,52 +1,57 @@
-﻿using CourseManagementAPI.Application.Interfaces;
+﻿using CourseManagementAPI.Application.DTOs;
+using CourseManagementAPI.Application.Interfaces;
+using CourseManagementAPI.Application.Services;
 using CourseManagementAPI.Domain.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagementAPI.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TrainersController : ControllerBase
     {
-        private readonly ITrainerRepository _trainerRepository;
+        private readonly ITrainerService _trainerService;
 
-        public TrainersController(ITrainerRepository trainerRepository)
+        public TrainersController(ITrainerService trainerService)
         {
-            _trainerRepository = trainerRepository;
+            _trainerService = trainerService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Trainer>>> GetAll()
+        public async Task<ActionResult<IEnumerable<TrainerDetailsDto>>> GetAll()
         {
-            var trainers = await _trainerRepository.GetAllTrainersAsync();
+            Console.WriteLine($"Received request for Trainers");
+            var trainers = await _trainerService.GetAllTrainersAsync();
             return Ok(trainers);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Trainer>> GetById(int id)
+        public async Task<ActionResult<TrainerDetailsDto>> GetById(string id)
         {
-            var trainer = await _trainerRepository.GetTrainerByIdAsync(id);
+            var trainer = await _trainerService.GetTrainerByIdAsync(id);
             if (trainer == null)
-                return NotFound();
+                return NotFound("Trainer not found");
+
             return Ok(trainer);
         }
 
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] Trainer trainer)
+        public async Task<IActionResult> Update(string id, [FromBody] TrainerUpdateDto trainerDto)
         {
-            if (id != trainer.Id)
-                return BadRequest();
+            if (trainerDto == null)
+                return BadRequest("Invalid trainer data");
 
-            await _trainerRepository.UpdateTrainerAsync(trainer);
+            await _trainerService.UpdateTrainerAsync(id, trainerDto);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            await _trainerRepository.DeleteTrainerAsync(id);
+            await _trainerService.DeleteTrainerAsync(id);
             return NoContent();
         }
     }

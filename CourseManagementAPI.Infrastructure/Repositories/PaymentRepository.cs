@@ -1,4 +1,5 @@
-﻿using CourseManagementAPI.Application.Interfaces;
+﻿using CourseManagementAPI.Application.DTOs;
+using CourseManagementAPI.Application.Interfaces;
 using CourseManagementAPI.Domain.Entities;
 using CourseManagementAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -27,12 +28,19 @@ namespace CourseManagementAPI.Infrastructure.Repositories
             return payment;
         }
 
-        public async Task<IEnumerable<Payment>> GetPaymentsByTrainerAsync(string trainerId)
+        public async Task<IEnumerable<PaymentDto>> GetPaymentsByTrainerAsync(string trainerId)
         {
             return await _context.Payments
-                .Include(p => p.Trainer)
-                .Where(p => p.TrainerId == trainerId)
+            .Where(p => p.TrainerId == trainerId)
+            .Select(p => new PaymentDto
+            {
+                 Id = p.Id,
+                 TrainerId = p.TrainerId,
+                 Amount = p.Amount,
+                 PaymentDate = p.PaymentDate,
+                 Status = p.Status
+            })
                 .ToListAsync();
-        }
+            }
     }
 }

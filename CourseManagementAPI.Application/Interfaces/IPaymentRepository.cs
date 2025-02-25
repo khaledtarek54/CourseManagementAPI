@@ -1,4 +1,5 @@
-﻿using CourseManagementAPI.Domain.Entities;
+﻿using CourseManagementAPI.Application.DTOs;
+using CourseManagementAPI.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace CourseManagementAPI.Application.Interfaces
     public interface IPaymentRepository
     {
         Task<Payment> ProcessPaymentAsync(string trainerId, decimal amount);
-        Task<IEnumerable<Payment>> GetPaymentsByTrainerAsync(string trainerId);
+        Task<IEnumerable<PaymentDto>> GetPaymentsByTrainerAsync(string trainerId);
     }
 }

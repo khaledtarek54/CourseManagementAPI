@@ -1,4 +1,5 @@
-﻿using CourseManagementAPI.Application.Interfaces;
+﻿using CourseManagementAPI.Application.DTOs;
+using CourseManagementAPI.Application.Interfaces;
 using CourseManagementAPI.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +32,8 @@ namespace CourseManagementAPI.API.Controllers
             return Ok(new { message = "Trainer unlinked from course successfully" });
         }
 
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<CourseTrainer>>> GetAllLinks()
+        [HttpGet("report")]
+        public async Task<ActionResult<IEnumerable<CourseTrainerReportDto>>> GetAllLinks()
         {
             var links = await _courseTrainerRepository.GetAllCourseTrainerLinksAsync();
             return Ok(links);

@@ -24,10 +24,14 @@ namespace CourseManagementAPI.Infrastructure.Repositories
             return await _context.Trainers.ToListAsync();
         }
 
-        public async Task<Trainer?> GetTrainerByIdAsync(int id)
+        public async Task<Trainer?> GetTrainerByIdAsync(string id)
         {
-            return await _context.Trainers.FindAsync(id);
+            return await _context.Trainers
+                .Include(t => t.CourseTrainers)
+                    .ThenInclude(ct => ct.Course) 
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
+
 
         public async Task UpdateTrainerAsync(Trainer trainer)
         {
@@ -35,7 +39,7 @@ namespace CourseManagementAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteTrainerAsync(int id)
+        public async Task DeleteTrainerAsync(string id)
         {
             var trainer = await _context.Trainers.FindAsync(id);
             if (trainer != null)

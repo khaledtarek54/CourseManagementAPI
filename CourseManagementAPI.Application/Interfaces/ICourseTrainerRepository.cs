@@ -1,4 +1,5 @@
-﻿using CourseManagementAPI.Domain.Entities;
+﻿using CourseManagementAPI.Application.DTOs;
+using CourseManagementAPI.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace CourseManagementAPI.Application.Interfaces
     {
         Task LinkCourseToTrainerAsync(int courseId, string trainerId);
         Task UnlinkCourseFromTrainerAsync(int courseId, string trainerId);
-        Task<IEnumerable<CourseTrainer>> GetAllCourseTrainerLinksAsync();
+        Task<IEnumerable<CourseTrainerReportDto>> GetAllCourseTrainerLinksAsync();
     }
 }
