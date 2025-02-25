@@ -2,6 +2,7 @@
 
 ## Overview
 This API provides a course management system where trainers can manage their courses, track payments, and generate reports. The system allows trainers to authenticate, perform CRUD operations on courses, link trainers to courses, and retrieve basic reports.
+To access the project swagger without installing the project locally use this link: http://coursemanagementapi.runasp.net/swagger/index.html, and make sure that the link is running on http protocol not https
 
 ## Tech Stack
 - .NET Core
