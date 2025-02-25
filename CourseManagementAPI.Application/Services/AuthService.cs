@@ -28,26 +28,27 @@ namespace CourseManagementAPI.Application.Services
         }
 
         public string GenerateJwtToken(string username)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(
-            _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
-            expires: DateTime.UtcNow.AddHours(2),
-            signingCredentials: credentials
-        );
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, username)
+            };
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JwtSettings:Issuer"],
+                audience: _configuration["JwtSettings:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(2),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
 
         public async Task<AuthResponse> LoginTrainerAsync(LoginModel model)
         {
@@ -57,7 +58,7 @@ namespace CourseManagementAPI.Application.Services
                 return new AuthResponse { Success = false, Message = "Invalid username or password." };
             }
 
-            var token = GenerateJwtToken(trainer?.UserName);
+            var token = GenerateJwtToken(trainer.UserName);
             return new AuthResponse { Success = true, Token = token };
         }
         public async Task<AuthResponse> CreateTrainerAsync(CreateTrainerDto model)

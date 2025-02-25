@@ -1,4 +1,5 @@
-﻿using CourseManagementAPI.Application.Interfaces;
+﻿using CourseManagementAPI.Application.DTOs;
+using CourseManagementAPI.Application.Interfaces;
 using CourseManagementAPI.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace CourseManagementAPI.API.Controllers
         }
 
         [HttpGet("trainer/{trainerId}")]
-        public async Task<ActionResult<IEnumerable<Payment>>> GetPaymentsByTrainer(string trainerId)
+        public async Task<ActionResult<IEnumerable<PaymentDto>>> GetPaymentsByTrainer(string trainerId)
         {
             var payments = await _paymentRepository.GetPaymentsByTrainerAsync(trainerId);
             return Ok(payments);

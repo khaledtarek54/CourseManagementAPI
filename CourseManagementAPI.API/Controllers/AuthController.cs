@@ -1,5 +1,6 @@
 ﻿using CourseManagementAPI.Application.DTOs;
 using CourseManagementAPI.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagementAPI.API.Controllers
@@ -34,5 +35,12 @@ namespace CourseManagementAPI.API.Controllers
 
             return Ok(response);
         }
+        [Authorize]
+        [HttpGet("test-auth")]
+        public IActionResult TestAuth()
+        {
+            return Ok("Auth is working!");
+        }
     }
+
 }

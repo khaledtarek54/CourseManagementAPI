@@ -10,8 +10,8 @@ namespace CourseManagementAPI.Application.Interfaces
     public interface ITrainerRepository
     {
         Task<IEnumerable<Trainer>> GetAllTrainersAsync();
-        Task<Trainer?> GetTrainerByIdAsync(int id);
+        Task<Trainer?> GetTrainerByIdAsync(string id);
         Task UpdateTrainerAsync(Trainer trainer);
-        Task DeleteTrainerAsync(int id);
+        Task DeleteTrainerAsync(string id);
     }
 }

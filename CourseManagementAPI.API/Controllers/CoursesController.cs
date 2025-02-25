@@ -1,58 +1,70 @@
-﻿using CourseManagementAPI.Application.Interfaces;
+﻿using CourseManagementAPI.Application.DTOs;
+using CourseManagementAPI.Application.Interfaces;
 using CourseManagementAPI.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagementAPI.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CoursesController : ControllerBase
     {
-        private readonly ICourseRepository _courseRepository;
+        private readonly ICourseService _courseService;
 
-        public CoursesController(ICourseRepository courseRepository)
+        public CoursesController(ICourseService courseService)
         {
-            _courseRepository = courseRepository;
+            _courseService = courseService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Course>>> GetAll()
         {
-            var courses = await _courseRepository.GetAllCoursesAsync();
+            var courses = await _courseService.GetAllCoursesAsync();
             return Ok(courses);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Course>> GetById(int id)
         {
-            var course = await _courseRepository.GetCourseByIdAsync(id);
+            var course = await _courseService.GetCourseByIdAsync(id);
             if (course == null)
                 return NotFound();
             return Ok(course);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Course course)
+        public async Task<ActionResult> Create([FromBody] CourseDto courseDto)
         {
-            await _courseRepository.AddCourseAsync(course);
-            return CreatedAtAction(nameof(GetById), new { id = course.Id }, course);
+            if (courseDto == null)
+                return BadRequest("Course data is required.");
+
+            var createdCourse = await _courseService.AddCourseAsync(courseDto);
+            return CreatedAtAction(nameof(GetById), new { id = createdCourse.Id }, createdCourse);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Course course)
+        public async Task<IActionResult> Update(int id, [FromBody] CourseDto courseDto)
         {
-            if (id != course.Id)
-                return BadRequest();
+            if (courseDto == null)
+                return BadRequest("Invalid course data.");
 
-            await _courseRepository.UpdateCourseAsync(course);
-            return NoContent();
+            try
+            {
+                await _courseService.UpdateCourseAsync(id, courseDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _courseRepository.DeleteCourseAsync(id);
+            await _courseService.DeleteCourseAsync(id);
             return NoContent();
         }
     }
