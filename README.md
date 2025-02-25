@@ -6,6 +6,9 @@ This API provides a course management system where trainers can manage their cou
 ## Try the APIs
 To access the project swagger without installing the project locally use this link: http://coursemanagementapi.runasp.net/swagger/index.html, and make sure that the link is running on http protocol not https.
 
+#Quick note
+by using register API will create a new trainer which should be the user to access the rest of APIs.
+
 ## Tech Stack
 - .NET Core
 - Entity Framework Core
@@ -62,6 +65,9 @@ The API uses JWT authentication. To authenticate:
 ```sh
    dotnet test
 ```
+## What should be implemented next
+I was going to add more features like `Docker`, `redis`, `serliog` and more but I didn't have that much time.
 
+Thank you
 
 
