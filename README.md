@@ -19,7 +19,7 @@ This API provides a course management system where trainers can manage their cou
 ### Steps to Run
 1. Clone the repository:
    ```sh
-   git clone <repository-url>
+   git clone https://github.com/khaledtarek54/CourseManagementAPI.git
    cd CourseManagementAPI
    ```
 2. Update `appsettings.json` with database connection details.
