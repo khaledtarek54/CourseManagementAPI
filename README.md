@@ -1,72 +1,69 @@
 # Course Management API
 
-## Overview
-This API provides a course management system using `Clean Architecture` where trainers can manage their courses, track payments, and generate reports. The system allows trainers to authenticate, perform CRUD operations on courses, link trainers to courses, and retrieve basic reports.
+> A **.NET Core** REST API for managing courses, trainers, and payments — designed with **Clean Architecture** layering, **EF Core** persistence, **JWT** auth, and **Swagger** documentation.
 
-## Try the APIs
-To access the project swagger without installing the project locally use this link: http://coursemanagementapi.runasp.net/swagger/index.html, and make sure that the link is running on http protocol not https.
+## What it does
 
-## Quick note
-Using register API will create a new trainer which should be the user to access the rest of APIs.
+Trainers register, authenticate, and manage their courses (CRUD), link themselves to courses, track payments, and pull basic reports.
 
-## Tech Stack
-- .NET Core
-- Entity Framework Core
-- JWT Authentication
-- SQL Server
-- Swagger for API documentation
+## Try it without installing
 
-## Installation & Setup
-### Prerequisites
-- .NET SDK installed
-- SQL Server
-- Postman (optional for testing API endpoints)
+A live deployment is available — visit the Swagger UI here:
+**http://coursemanagementapi.runasp.net/swagger/index.html** (HTTP only, not HTTPS)
 
-### Steps to Run
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/khaledtarek54/CourseManagementAPI.git
-   cd CourseManagementAPI
-   ```
-2. Update `appsettings.json` with database connection details.
-3. Apply database migrations:
-   ```sh
-   dotnet ef database update
-   ```
-4. Run the API:
-   ```sh
-   dotnet run
-   ```
-
-## API Documentation
-The API documentation is available through Swagger. Once the API is running, navigate to:
-```
-http://localhost:<port>/swagger
-```
-It provides details about available endpoints, request/response formats, and authentication.
-
-## Authentication
-The API uses JWT authentication. To authenticate:
-1. Register/Login to obtain a token.
-2. Include the token in the `Authorization` header as:
-   ```sh
-   Authorization: Bearer <your-token>
-   ```
+Register a trainer first; that account is the entry point for the rest of the API.
 
 ## Features
-- **Trainer Management**: CRUD operations on trainers.
-- **Course Management**: CRUD operations on courses.
-- **Course-Trainer Linking**: Assign courses to trainers.
-- **Payment Tracking**: Manage trainer payments.
-- **Reporting**: Basic reporting on trainer-course linkages.
 
-## Running Unit Tests
-```sh
-   dotnet test
+- 🔐 JWT-based authentication (register, login, refresh)
+- 📚 Course CRUD with trainer ownership
+- 🔗 Trainer ↔ course linking
+- 💳 Payment tracking
+- 📊 Basic reporting endpoints
+- 📖 Swagger / OpenAPI documentation
+
+## Architecture
+
+Clean Architecture in four layers:
+
 ```
-## What should be implemented next
-I was going to add more features like `Docker`, `redis`, `serliog` and more but I didn't have that much time.
+src/
+├── Domain/             # Entities, value objects, domain interfaces
+├── Application/        # Use cases, DTOs, validators (FluentValidation)
+├── Infrastructure/     # EF Core repositories, JWT, external services
+└── API/                # Controllers, middleware, Swagger config
+```
 
-Thank you
+The API layer depends on Application; Application defines interfaces that Infrastructure implements; Domain depends on nothing.
 
+## Tech stack
 
+- .NET Core 7+
+- Entity Framework Core
+- SQL Server
+- JWT (Microsoft.AspNetCore.Authentication.JwtBearer)
+- Swagger / Swashbuckle
+
+## Quick start (local)
+
+```bash
+git clone https://github.com/khaledtarek54/CourseManagementAPI.git
+cd CourseManagementAPI
+
+# 1. Update connection string in src/API/appsettings.json
+# 2. Apply migrations
+dotnet ef database update --project src/Infrastructure --startup-project src/API
+
+# 3. Run
+dotnet run --project src/API
+```
+
+Browse Swagger at `http://localhost:<port>/swagger`.
+
+## License
+
+MIT
+
+---
+
+Built by [Khaled Tarek](https://github.com/khaledtarek54) · [LinkedIn](https://www.linkedin.com/in/khaled-tarek-3596401b1)
